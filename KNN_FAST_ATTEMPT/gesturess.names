@@ -1,0 +1,12 @@
+Gesture		output		NULL, YES, NO
+Time 		continuous	0, 1500
+AccX		continuous	-20, 20
+AccY		continuous	-20, 20
+AccZ		continuous	-20, 20
+AngVelX		continuous	-360, 360
+AngVelY		continuous	-360, 360
+AngVelZ		continuous	-360, 360
+QuatRotX	continuous	-1, 1
+QuatRotY	continuous	-1, 1
+QuatRotZ	continuous	-1, 1
+QuatRotW	continuous	-1, 1

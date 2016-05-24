@@ -1,0 +1,10 @@
+C:\Users\timon\Desktop\KNN_OLD_BUT_GOOD\obj\Debug\KNN.csprojResolveAssemblyReference.cache
+C:\Users\timon\Desktop\KNN_OLD_BUT_GOOD\bin\Debug\KNN.dll
+C:\Users\timon\Desktop\KNN_OLD_BUT_GOOD\bin\Debug\KNN.pdb
+C:\Users\timon\Desktop\KNN_OLD_BUT_GOOD\obj\Debug\KNN.dll
+C:\Users\timon\Desktop\KNN_OLD_BUT_GOOD\obj\Debug\KNN.pdb
+V:\KNN_OLD_BUT_GOOD\obj\Debug\KNN.exe
+V:\KNN_OLD_BUT_GOOD\obj\Debug\KNN.csprojResolveAssemblyReference.cache
+V:\KNN_OLD_BUT_GOOD\bin\Debug\KNN.exe
+V:\KNN_OLD_BUT_GOOD\bin\Debug\KNN.pdb
+V:\KNN_OLD_BUT_GOOD\obj\Debug\KNN.pdb

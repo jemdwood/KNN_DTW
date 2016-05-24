@@ -1,0 +1,30 @@
+﻿<Properties StartupItem="KNN.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Classifiers/KNN/KNearest.cs">
+    <Files>
+      <File FileName="Data/DataSet.cs" Line="1" Column="1" />
+      <File FileName="Data/DataInstance.cs" Line="1" Column="1" />
+      <File FileName="Data/Feature.cs" Line="1" Column="1" />
+      <File FileName="Readers/DataReader.cs" Line="1" Column="1" />
+      <File FileName="Classifiers/IClassifier.cs" Line="1" Column="1" />
+      <File FileName="Classifiers/Selectors/FeatureSelector.cs" Line="1" Column="1" />
+      <File FileName="Readers/IReader.cs" Line="1" Column="1" />
+      <File FileName="Readers/BaseReader.cs" Line="1" Column="1" />
+      <File FileName="Main.cs" Line="24" Column="1" />
+      <File FileName="Classifiers/KNN/KNearest.cs" Line="41" Column="1" />
+      <File FileName="Data/DataFieldLabels.cs" Line="1" Column="1" />
+      <File FileName="SeriesVariable.cs" Line="1" Column="1" />
+      <File FileName="Dtw.cs" Line="1" Column="1" />
+      <File FileName="Data/DataReaderConverter.cs" Line="76" Column="1" />
+      <File FileName="Data/DSBuilder.cs" Line="63" Column="27" />
+      <File FileName="UCR_DTW.cs" Line="374" Column="3" />
+      <File FileName="UCR_ED.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/JeremyWood1/Dropbox/KNN_Resources/KNN_FAST_ATTEMPT/Classifiers/KNN/KNearest.cs" line="41" column="15" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
