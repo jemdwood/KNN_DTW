@@ -217,7 +217,7 @@ namespace KNN.Classifiers.KNN {
 
 		
 //			double dtw = UCRCSharp.UCR.DTW (d_trains, d_tunes, d_tunes.Length, false, 0.3);
-			Dtw warped_distance = new Dtw (d_tunes, d_trains);
+			Dtw warped_distance = new Dtw (d_tunes, d_trains, DistanceMeasure.SquaredEuclidean,true, true, null, null, 30  );
 
 			double dtw = warped_distance.GetCost ();
 
@@ -230,7 +230,7 @@ namespace KNN.Classifiers.KNN {
 			if (double.IsNaN(d)) {
 				Console.Write("Could not convert to double: " + s);
 			} 
-			return d; //hi
+			return d; 
 		} 
 		
     }

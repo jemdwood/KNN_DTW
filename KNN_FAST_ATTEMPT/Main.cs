@@ -11,7 +11,7 @@ namespace KNN {
 			converter.write_files (true);
 			var builder = new DSBuilder (new string[]{converter.names_name, converter.data_name});
 			DataSet data = builder.BuildDataSet ();
-			var sets = data.RandomInstance(710);  //TODO TODO TODO a bad split!
+			var sets = data.RandomInstance(600);  //TODO TODO TODO a bad split!
 			var knn = new KNearest(sets[0], true);
 			//var fs = new FeatureSelector(knn);
 			//var optimal = fs.ForwardFeatureSelect(Enumerable.Range(0, data.Features.Count - 1).Where(x => x != data.OutputIndex).ToList());
