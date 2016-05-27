@@ -14,6 +14,8 @@ namespace KNN.Classifiers.KNN {
 		private bool storeDynamically;
 		public List<double> dtw_time_taken = new List<double>();
 
+		public int? SakoeChiba { get; set; } = null;
+
 		private Dictionary<string, double> dynamicDistanceRecords;
         public int K { get; set; }
         public List<int> Features { get; set; }
@@ -34,9 +36,8 @@ namespace KNN.Classifiers.KNN {
             m_DataSet.DataEntries.Clear();
         }
         public double Test(List<DataInstance> testData) {
-            var outputValues = m_DataSet.OutputValues;
 
-			var est = Estimate(testData, Features, K, outputValues).Value;
+			var est = Estimate(testData, Features, K, m_DataSet.OutputValues).Value;
 			Console.WriteLine (dtw_time_taken.Average(p=>p));
 			Console.WriteLine ("accuracy:" + est.ToString ());
 			return est;
@@ -53,11 +54,11 @@ namespace KNN.Classifiers.KNN {
             DateTime start = DateTime.Now;
             var optimal = new KeyValuePair<int, double>(0,0); 
             var outputValues = m_DataSet.OutputValues;
-			for(int i=2, k=5; k< (int) m_DataSet.DataEntries.Count/4.0; i++, k=(int)Math.Pow(2, i)-1) { //TODO I narrowed the scope a bit
+			for(int i=1, k=4; k< (int) m_DataSet.DataEntries.Count/4.0; k=(int)Math.Pow(2, i)-1, i++) { //TODO I narrowed the scope a bit
 				var estimate = Estimate(m_DataSet.DataEntries, indices, k, outputValues);
 				if (estimate.Value > optimal.Value) {
 					optimal = estimate;
-				} else if ((estimate.Value + 0.1 < optimal.Value) || (Math.Abs (Math.Log (optimal.Key + 1) / Math.Log (2) - i) > 5) ) {
+				} else if ((estimate.Value + 0.1 < optimal.Value) || (Math.Abs (Math.Log (optimal.Key + 1) / Math.Log (2) - i) > 3) ) {
 					break; //End prematurely if the optimal seems to have enough of an advantage or the optimal hasn't changed in over 3 rounds TODO
 				} 
                 Console.WriteLine("K:{0} -- Estimate:{1:0.##}%", estimate.Key, estimate.Value * 100.0);
@@ -83,10 +84,10 @@ namespace KNN.Classifiers.KNN {
 
 		public string Classify(DataInstance instance, string[] outputOptions = default(string[]), List<int> indices = default(List<int>))
         {
-			if (outputOptions.Length == 0){
+			if (outputOptions == null || outputOptions.Count() == 0){
 				outputOptions = m_DataSet.OutputValues;
 			}
-			if (indices.Count == 0) {
+			if (indices == null || indices.Count() == 0) {
 				indices = this.Features;
 			}
             if (K == 0)
@@ -105,7 +106,7 @@ namespace KNN.Classifiers.KNN {
             SortedDictionary<string, int> outputs = new SortedDictionary<string, int>();
             foreach (string output in outputValues)
             {
-                outputs.Add(output, neighbors.Count(n => n.Value[m_DataSet.OutputIndex] == output));
+				outputs.Add(output, neighbors.Count(n => n.Value.getOutput() == output));
             }
             string label = getMaxLabel(outputs);
 
@@ -128,7 +129,7 @@ namespace KNN.Classifiers.KNN {
 				//Console.Write ("\tdone with estimate\n");
                 var neighbors = FindNearestNeighbors(instance, indices, k);
                 string label = extractClassificationFromNeighbors(outputValues, neighbors).Key;
-				if (instance [m_DataSet.OutputIndex] == label) {
+				if (instance.getOutput() == label) {
 					correct++;
 				}
             }
@@ -201,23 +202,23 @@ namespace KNN.Classifiers.KNN {
         /// <param name="tune">Value of colon-separated times from our local tuning set.</param>
 		/// <param name="train">Value of colon-separated times from our local training set.</param>
         /// <returns>Double</returns>
-        private static double Distance(string tune, string train) {
+		private static double Distance(double[] d_tunes, double[] d_trains) {
 
 			//string arr_regex_line = @"([0-9\-+\.]+(?:\x3A)?)"; // Matches any decimal, optionally followed by ":"
 			//MatchCollection tune_time_series_col = Regex.Matches(tune, arr_regex_line, RegexOptions.IgnorePatternWhitespace);
 
-			string[] s_tunes = tune.Split (':'); //new string[tune_time_series_col.Count];
+//			string[] s_tunes = tune.Split (':'); //new string[tune_time_series_col.Count];
 			//tune_time_series_col.CopyTo (s_tunes, 0);
 
 			//MatchCollection train_time_series_col = Regex.Matches(tune, arr_regex_line, RegexOptions.IgnorePatternWhitespace);
-			string[] s_trains = train.Split(':'); //new string[train_time_series_col.Count];
+//			string[] s_trains = train.Split(':'); //new string[train_time_series_col.Count];
 			//train_time_series_col.CopyTo (s_trains, 0);
-			double[] d_tunes = Array.ConvertAll(s_tunes, new Converter<string, double>(stringToDouble));
-			double[] d_trains = Array.ConvertAll(s_trains, new Converter<string, double>(stringToDouble));
+//			double[] d_tunes = Array.ConvertAll(s_tunes, new Converter<string, double>(stringToDouble));
+//			double[] d_trains = Array.ConvertAll(s_trains, new Converter<string, double>(stringToDouble));
 
 		
-//			double dtw = UCRCSharp.UCR.DTW (d_trains, d_tunes, d_tunes.Length, false, 0.3);
-			Dtw warped_distance = new Dtw (d_tunes, d_trains, DistanceMeasure.SquaredEuclidean,true, true, null, null, 30  );
+//			double dtw = UCRCSharp.UCR.DTW (d_trains, d_tunes, d_tunes.Length, true, 0.3);
+			Dtw warped_distance = new Dtw (d_tunes, d_trains, DistanceMeasure.SquaredEuclidean,true, true, null, null, 10 );
 
 			double dtw = warped_distance.GetCost ();
 
@@ -225,12 +226,13 @@ namespace KNN.Classifiers.KNN {
         }
 
 		private static double stringToDouble(string s) {
-			double d = double.NaN;
-			double.TryParse (s, out d);
-			if (double.IsNaN(d)) {
-				Console.Write("Could not convert to double: " + s);
-			} 
-			return d; 
+		//	double d = double.NaN;
+		//	double.TryParse (s, out d);
+		//	if (double.IsNaN(d)) {
+		//		Console.Write("Could not convert to double: " + s);
+		//	} 
+		//	return d; 
+			return double.Parse(s);
 		} 
 		
     }

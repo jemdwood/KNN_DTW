@@ -1,4 +1,3 @@
-Gesture		 output		 YES,NO,NULL
 Time		 continuous		 -360, 360
 AccX		 continuous		 -360, 360
 AccY		 continuous		 -360, 360

@@ -380,7 +380,7 @@ namespace UCRCSharp
             long[] order; ///new order of the query
             double[] u, l, qo, uo, lo, tz, cb, cb1, cb2, u_d, l_d;
 
-
+			int tt = 0; //TODO Mine
             double d;
             int i, j;
             double ex, ex2, mean, std;
@@ -675,7 +675,7 @@ namespace UCRCSharp
                                             // Update bsf
                                             // loc is the real starting location of the nearest neighbor in the file
                                             bsf = dist;
-											//return dist; //TODO Maybe speed up?
+											if(tt++ > 4) return dist; //TODO Maybe speed up?
                                             loc = (it)*(EPOCH - m + 1) + i - m + 1;
                                         }
                                     }

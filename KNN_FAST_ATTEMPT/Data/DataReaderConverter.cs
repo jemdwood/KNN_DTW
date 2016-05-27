@@ -147,10 +147,11 @@ namespace KNN
 			}
 			using (StreamWriter writer = File.CreateText(fn)) {
 				Console.WriteLine ("Writing new condensed names file");
-				writer.WriteLine ("Gesture\t\t output\t\t " + string.Join (",", classes));
+				//writer.WriteLine ("Gesture\t\t output\t\t " + string.Join (",", classes));
 				foreach (string label in Enum.GetNames(typeof(DataFieldLabels))) {
 					writer.WriteLine ("{0}\t\t continuous\t\t -360, 360", label); //TODO just uses max of our current data, not great!!
 				}
+				//writer.WriteLine ("Gesture\t\t output\t\t " + string.Join (",", classes));
 			}
 			names_name = fn;
 		}

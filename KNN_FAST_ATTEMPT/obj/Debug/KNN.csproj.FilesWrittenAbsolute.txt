@@ -2,3 +2,7 @@
 /Users/JeremyWood1/Dropbox/KNN_Resources/KNN_FAST_ATTEMPT/bin/Debug/KNN.exe
 /Users/JeremyWood1/Dropbox/KNN_Resources/KNN_FAST_ATTEMPT/obj/Debug/KNN.exe
 /Users/JeremyWood1/Dropbox/KNN_Resources/KNN_FAST_ATTEMPT/obj/Debug/KNN.exe.mdb
+/Users/JeremyWood1/Dropbox/KNN_Resources/KNN_FAST_ATTEMPT/bin/Debug/KNN.dll.mdb
+/Users/JeremyWood1/Dropbox/KNN_Resources/KNN_FAST_ATTEMPT/bin/Debug/KNN.dll
+/Users/JeremyWood1/Dropbox/KNN_Resources/KNN_FAST_ATTEMPT/obj/Debug/KNN.dll
+/Users/JeremyWood1/Dropbox/KNN_Resources/KNN_FAST_ATTEMPT/obj/Debug/KNN.dll.mdb

@@ -32,13 +32,13 @@ namespace KNN.Classifiers.Selectors {
         /// <returns>KVP[int,List[int]]</returns>
         public KeyValuePair<int, List<int>> ForwardFeatureSelect(List<int> features) {
             Console.WriteLine("Starting Forward Feature Select using {0} features.", features.Count + 1);
-			List<int> autoInclude = new List<int> {3, 4};
+			List<int> autoInclude = new List<int> {2, 3};
 			List<int> toExclude = new List<int> {			//TODO hardcoded
-				(int) DataFieldLabels.Time +1, 
-		//		(int) DataFieldLabels.QuatRotW+1, 
-				(int) DataFieldLabels.QuatRotX+1,
-				(int) DataFieldLabels.QuatRotY+1,
-		//		(int) DataFieldLabels.QuatRotZ+1
+				(int) DataFieldLabels.Time, 
+		//		(int) DataFieldLabels.QuatRotW, 
+				(int) DataFieldLabels.QuatRotX,
+				(int) DataFieldLabels.QuatRotY,
+		//		(int) DataFieldLabels.QuatRotZ
             };
             var optimal = new KeyValuePair<int, double>(0,0);
             var optimalFeatures = autoInclude;

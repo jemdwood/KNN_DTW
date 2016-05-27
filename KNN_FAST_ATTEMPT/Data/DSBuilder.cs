@@ -32,14 +32,13 @@ namespace KNN.Data {
         private void BuildDataEntries(ref DataSet dataSet) {
             foreach(string entry in m_DataReader.ValidEntries()) {
                 string[] data = entry.Split(',');
-                if(data.Length != dataSet.Features.Count){
+                if(data.Length != dataSet.Features.Count + 1){  // Account for gesture
                     Console.WriteLine("[Error]: Invalid # of data elements in {0}.", data.Select(s=>s.ToString(CultureInfo.InvariantCulture)));
                     continue;
                 }
                 var instance = new DataInstance();
-                for(int i=0; i<data.Length; i++) {
-                    if(IsValidValue(dataSet.Features[i].Type, data[i], dataSet.Features[i].PossibleValues.ToArray()))
-                        instance.Add(data[i]);
+                for(int i=0; i<data.Length; i++) { //skip the first element
+                    instance.Add(data[i]);
                 }
                 if(instance.Count == dataSet.Features.Count)
                     dataSet.DataEntries.Add(instance);

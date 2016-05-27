@@ -9,6 +9,7 @@ namespace KNN.Data {
         public List<Feature> Features { get; private set; }
         public List<DataInstance> DataEntries { get; private set; }
         public int OutputIndex { get; set; }
+		public string[] OutputValues { get; set; }
 
         public DataSet() {
             Features = new List<Feature>();
@@ -70,11 +71,11 @@ namespace KNN.Data {
         /// Returns string[] containing our possible output(target concept) variables.
         /// </summary>
         /// <returns>string[]</returns>
-        public string[] OutputValues {
-            get{
-                return Features.Where(i => i.Type == Types.output).SelectMany(i => i.PossibleValues).ToArray();
-            }
-        }
+//        public string[] OutputValues {
+//            get{
+//                return Features.Where(i => i.Type == Types.output).SelectMany(i => i.PossibleValues).ToArray();
+//            }
+//        }
 
         /// <summary>
         /// Returns integer count of the number of entries that contain the given output string.
@@ -82,7 +83,7 @@ namespace KNN.Data {
         /// <param name="output">Target concept value</param>
         /// <returns>Int</returns>
         public int OutputValueCount(string output) {
-           return DataEntries.SelectMany(i => i).Count(i => i == output);
+			return DataEntries.Count(i => i.getOutput()  == output);
         }
     }
 }
