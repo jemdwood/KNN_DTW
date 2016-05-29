@@ -133,21 +133,21 @@ namespace KNN
 
         private void InitializeArrays()
         {
-            _distances = new double[_xLen + _slopeMatrixLookbehind][];
+			_distances = new double[_xLen + _slopeMatrixLookbehind][];
             for (int i = 0; i < _xLen + _slopeMatrixLookbehind; i++)
                 _distances[i] = new double[_yLen + _slopeMatrixLookbehind];
 
-            _pathCost = new double[_xLen + _slopeMatrixLookbehind][];
-            for (int i = 0; i < _xLen + _slopeMatrixLookbehind; i++)
-                _pathCost[i] = new double[_yLen + _slopeMatrixLookbehind];
+			_pathCost = new double[_xLen + _slopeMatrixLookbehind][];
+          	for (int i = 0; i < _xLen + _slopeMatrixLookbehind; i++)
+          	     _pathCost[i] = new double[_yLen + _slopeMatrixLookbehind];
 
             _predecessorStepX = new int[_xLen + _slopeMatrixLookbehind][][];
             for (int i = 0; i < _xLen + _slopeMatrixLookbehind; i++)
                 _predecessorStepX[i] = new int[_yLen + _slopeMatrixLookbehind][];
 
-            _predecessorStepY = new int[_xLen + _slopeMatrixLookbehind][][];
+			_predecessorStepY = new int[_xLen + _slopeMatrixLookbehind][][];
             for (int i = 0; i < _xLen + _slopeMatrixLookbehind; i++)
-                _predecessorStepY[i] = new int[_yLen + _slopeMatrixLookbehind][];
+               _predecessorStepY[i] = new int[_yLen + _slopeMatrixLookbehind][];
         }
 
         private void CalculateDistances()
@@ -177,16 +177,30 @@ namespace KNN
                     var xVal = xSeriesForVariable[i];
                     for (int j = 0; j < _yLen; j++)
                     {
-                        if(_distanceMeasure == DistanceMeasure.Manhattan)
-                            currentDistances[j] += Math.Abs(xVal - ySeriesForVariable[j]) * variableWeight;
-                        else if (_distanceMeasure == DistanceMeasure.Maximum)
-                            currentDistances[j] = Math.Max(currentDistances[j], Math.Abs(xVal - ySeriesForVariable[j]) * variableWeight);
-                        else
-                        {
-                            //Math.Pow(xVal - ySeriesForVariable[j], 2) is much slower, so direct multiplication with temporary variable is used
-                            var dist = (xVal - ySeriesForVariable[j]) * variableWeight;
-                            currentDistances[j] += dist * dist;
-                        }        
+						switch(_distanceMeasure) {
+						case DistanceMeasure.Manhattan:
+							currentDistances [j] += Math.Abs (xVal - ySeriesForVariable [j]) * variableWeight;
+							break;
+						case DistanceMeasure.Maximum:
+							currentDistances [j] = Math.Max (currentDistances [j], Math.Abs (xVal - ySeriesForVariable [j]) * variableWeight);
+							break;
+						default:
+							//Math.Pow(xVal - ySeriesForVariable[j], 2) is much slower, so direct multiplication with temporary variable is used
+							var dist = (xVal - ySeriesForVariable [j]) * variableWeight;
+							currentDistances [j] += dist * dist;
+							break;
+						}
+//
+//						if(_distanceMeasure == DistanceMeasure.Manhattan)
+//                            currentDistances[j] += Math.Abs(xVal - ySeriesForVariable[j]) * variableWeight;
+//                        else if (_distanceMeasure == DistanceMeasure.Maximum)
+//                            currentDistances[j] = Math.Max(currentDistances[j], Math.Abs(xVal - ySeriesForVariable[j]) * variableWeight);
+//                        else
+//                        {
+//                            //Math.Pow(xVal - ySeriesForVariable[j], 2) is much slower, so direct multiplication with temporary variable is used
+//                            var dist = (xVal - ySeriesForVariable[j]) * variableWeight;
+//                            currentDistances[j] += dist * dist;
+//                        }        
                     }
                 }
             }
@@ -386,10 +400,10 @@ namespace KNN
                 InitializeArrays();
                 CalculateDistances();
 
-                if (_useSlopeConstraint)
-                    CalculateWithSlopeLimit();
+                if (!_useSlopeConstraint)
+					CalculateWithoutSlopeConstraint();
                 else
-                    CalculateWithoutSlopeConstraint();
+					CalculateWithSlopeLimit();
 
                 _calculated = true;
             }

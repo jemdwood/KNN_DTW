@@ -16,6 +16,10 @@ namespace KNN.Data {
 			}
         }
 
+		public DataInstance(IEnumerable<double[]> data) {
+			this.AddRange (data);
+		}
+
 		public DataInstance(IEnumerable<string> data, System.Collections.Generic.List<KNN.Data.Feature> features) {
 			if(data.Count() != features.Count){
 				Console.WriteLine("[Error]: Invalid # of data elements in Instance Creation");

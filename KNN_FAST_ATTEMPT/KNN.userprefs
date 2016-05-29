@@ -1,16 +1,16 @@
 ﻿<Properties StartupItem="KNN.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Main.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../GestureClassification/DataObserver.cs">
     <Files>
-      <File FileName="Main.cs" Line="31" Column="41" />
-      <File FileName="Classifiers/KNN/KNearest.cs" Line="85" Column="3" />
+      <File FileName="Classifiers/KNN/KNearest.cs" Line="227" Column="23" />
       <File FileName="UCR_DTW.cs" Line="1" Column="1" />
       <File FileName="Dtw.cs" Line="64" Column="9" />
       <File FileName="Data/DataReaderConverter.cs" Line="1" Column="1" />
-      <File FileName="Data/DSBuilder.cs" Line="1" Column="1" />
-      <File FileName="Data/DataInstance.cs" Line="1" Column="1" />
-      <File FileName="Data/DataSet.cs" Line="1" Column="1" />
+      <File FileName="Data/DataInstance.cs" Line="20" Column="21" />
+      <File FileName="Data/DataSet.cs" Line="77" Column="16" />
       <File FileName="Classifiers/Selectors/FeatureSelector.cs" Line="1" Column="1" />
+      <File FileName="../../GestureClassification/DataObserver.cs" Line="84" Column="33" />
+      <File FileName="Data/DSBuilder.cs" Line="39" Column="36" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

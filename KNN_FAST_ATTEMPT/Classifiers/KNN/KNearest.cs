@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Collections;
+using System.Linq;
 using System.Text;
 using KNN.Data;
 using KNN;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 
 namespace KNN.Classifiers.KNN {
@@ -38,7 +39,7 @@ namespace KNN.Classifiers.KNN {
         public double Test(List<DataInstance> testData) {
 
 			var est = Estimate(testData, Features, K, m_DataSet.OutputValues).Value;
-			Console.WriteLine (dtw_time_taken.Average(p=>p));
+			Console.WriteLine ("time ticks: " + (1.0*dtw_time_taken.Average(p=>p)/testData.Count).ToString());
 			Console.WriteLine ("accuracy:" + est.ToString ());
 			return est;
         }
@@ -54,12 +55,12 @@ namespace KNN.Classifiers.KNN {
             DateTime start = DateTime.Now;
             var optimal = new KeyValuePair<int, double>(0,0); 
             var outputValues = m_DataSet.OutputValues;
-			for(int i=1, k=4; k< (int) m_DataSet.DataEntries.Count/4.0; k=(int)Math.Pow(2, i)-1, i++) { //TODO I narrowed the scope a bit
+			for(int i=1, k=4; k< (int) m_DataSet.DataEntries.Count/4.0; k=(int)Math.Pow(2, i)-1, i++) { // I narrowed the scope a bit
 				var estimate = Estimate(m_DataSet.DataEntries, indices, k, outputValues);
 				if (estimate.Value > optimal.Value) {
 					optimal = estimate;
 				} else if ((estimate.Value + 0.1 < optimal.Value) || (Math.Abs (Math.Log (optimal.Key + 1) / Math.Log (2) - i) > 3) ) {
-					break; //End prematurely if the optimal seems to have enough of an advantage or the optimal hasn't changed in over 3 rounds TODO
+					break; //End prematurely if the optimal seems to have enough of an advantage or the optimal hasn't changed in over 3 rounds 
 				} 
                 Console.WriteLine("K:{0} -- Estimate:{1:0.##}%", estimate.Key, estimate.Value * 100.0);
             }
@@ -123,8 +124,11 @@ namespace KNN.Classifiers.KNN {
         /// <returns>KVP(int,double)</returns>
         private KeyValuePair<int,double> Estimate(List<DataInstance> data, List<int> indices, int k, string[] outputValues) {
             double correct = 0;
+			Stopwatch stopWatch = new Stopwatch (); 
             foreach(DataInstance instance in data) {
 				Console.Write (".");
+				stopWatch.Reset ();
+				stopWatch.Start (); 
 				//Console.Write (c++ / data.Count ());
 				//Console.Write ("\tdone with estimate\n");
                 var neighbors = FindNearestNeighbors(instance, indices, k);
@@ -132,6 +136,8 @@ namespace KNN.Classifiers.KNN {
 				if (instance.getOutput() == label) {
 					correct++;
 				}
+				stopWatch.Stop (); //TODO TODO
+				dtw_time_taken.Add(stopWatch.ElapsedTicks); //TODO TODO
             }
 			Console.WriteLine ();
             return new KeyValuePair<int,double>(k, correct/(double)data.Count);
@@ -146,14 +152,22 @@ namespace KNN.Classifiers.KNN {
         /// <param name="k">Number of neighbors to find</param>
         /// <returns>KVP(double,DataInstance)</returns>
         private List<KeyValuePair<double, DataInstance>> FindNearestNeighbors(DataInstance tune, List<int> indices, int k) {
-            var neighbors = new List<KeyValuePair<double, DataInstance>>();
-            foreach(DataInstance trainingInstance in m_DataSet.DataEntries) {
-				
-                if(trainingInstance == tune) continue;
-                double distance = ComputeDistance(tune, trainingInstance, indices);
-                neighbors.Add(new KeyValuePair<double, DataInstance>(distance, trainingInstance));
-            }
-            return neighbors.OrderBy(n=>n.Key).Take(k).ToList();
+			var neighbors = new SortedList<double, DataInstance> ();
+			for (int i = 0; i < m_DataSet.DataEntries.Count; i ++) {
+				//if(m_DataSet.DataEntries[i] == tune) continue; Take out for optimization when always running on new data
+				double distance = ComputeDistance(tune, m_DataSet.DataEntries[i], indices);
+				if (double.IsInfinity (distance))
+					continue;
+				neighbors.Add (distance, m_DataSet.DataEntries [i]);
+			}
+//			foreach(DataInstance trainingInstance in m_DataSet.DataEntries) {
+//				
+//                if(trainingInstance == tune) continue;
+//                double distance = ComputeDistance(tune, trainingInstance, indices);
+//                neighbors.Add(new KeyValuePair<double, DataInstance>(distance, trainingInstance));
+//            }
+
+            return neighbors.Take(k).ToList();
         }
 
         /// <summary>
@@ -165,17 +179,17 @@ namespace KNN.Classifiers.KNN {
         /// <param name="train">Single training instance</param>
         /// <returns>Double</returns>
         private double ComputeDistance(DataInstance tune, DataInstance train, IEnumerable<int> indices) {
-			double t1 = DateTime.Now.Ticks; //TODO
 
 			double d = 0;
             foreach(int i in indices) {
 				double add =0;
-				List<string> signature_l = new List<string> { (i*10).ToString(), tune.GetHashCode ().ToString(), train.GetHashCode ().ToString() };
-				signature_l.Sort ();
-				string signature = string.Join (":", signature_l.ToArray());
-				if (storeDynamically && dynamicDistanceRecords.ContainsKey (signature)) {
-					add = dynamicDistanceRecords [signature];
-				} else {
+				string signature = default(string);
+				if (storeDynamically) {
+					List<string> signature_l = new List<string> { (i*10).ToString(), tune.GetHashCode ().ToString(), train.GetHashCode ().ToString() };
+					signature_l.Sort ();
+					signature = string.Join (":", signature_l.ToArray());
+				} 
+				if (!storeDynamically || !dynamicDistanceRecords.ContainsKey (signature)) {
 					switch (m_DataSet.Features [i].Type) {
 					case Types.continuous:
 						add = Distance (tune [i], train [i]);
@@ -185,12 +199,12 @@ namespace KNN.Classifiers.KNN {
 						break;
 					}
 					if (storeDynamically) dynamicDistanceRecords.Add (signature, add);
-					//Console.Write ("?"); //TODO
+				} else {
+					add = dynamicDistanceRecords [signature];
 				}
 				d += add;
             }
-			double t2 = DateTime.Now.Ticks; //TODO
-			dtw_time_taken.Add(t2 - t1); //TODO
+
 
             return Math.Sqrt(d);
         }
@@ -218,11 +232,8 @@ namespace KNN.Classifiers.KNN {
 
 		
 //			double dtw = UCRCSharp.UCR.DTW (d_trains, d_tunes, d_tunes.Length, true, 0.3);
-			Dtw warped_distance = new Dtw (d_tunes, d_trains, DistanceMeasure.SquaredEuclidean,true, true, null, null, 10 );
 
-			double dtw = warped_distance.GetCost ();
-
-			return dtw;
+			return new Dtw (d_tunes, d_trains, DistanceMeasure.SquaredEuclidean,true, true, null, null, 8).GetCost ();
         }
 
 		private static double stringToDouble(string s) {

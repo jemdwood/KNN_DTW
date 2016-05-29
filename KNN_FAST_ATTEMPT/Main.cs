@@ -12,9 +12,9 @@ namespace KNN {
 			converter.write_files (true);
 			var builder = new DSBuilder (new string[]{converter.names_name, converter.data_name});
 			DataSet data = builder.BuildDataSet ();
-			var sets = data.RandomInstance(700); 
+			var sets = data.RandomInstance(710); 
 			foreach (DataSet dataset in sets) dataset.OutputValues = OutputValues; //TODO NEW NEW
-			var knn = new KNearest(sets[0], true);
+			var knn = new KNearest(sets[0], false);
 			//var fs = new FeatureSelector(knn);
 			//var optimal = fs.ForwardFeatureSelect(Enumerable.Range(0, data.Features.Count - 1).Where(x => x != data.OutputIndex).ToList());
 			//knn.K = optimal.Key;
